@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+/* Add this line to import Bootstrap */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Your existing styles go here */
+
+.completed{
+    text-decoration: line-through;
+}
+.notcompleted{
+    font-weight: bold;
+}
+
+.table{
+    width: max-content;
+    /* width: 100%; */
+}
+*{
+    box-sizing: border-box;
+}
+.safe:hover{
+    background-color: rgb(3, 254, 3);
+    color: white;
+}
+.danger:hover{
+    background-color: red;
+    color: white;
+}
