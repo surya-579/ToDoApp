@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Todo } from './ToDo';
+import { Todo } from './Todo';
 import { Subject } from 'rxjs';
 
 @Component({
