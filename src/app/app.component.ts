@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Todo } from './ToDo';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,19 @@ export class AppComponent {
   theme: boolean = false;
   btn: any;
 
+  // Subject to notify about todo changes
+  private todoChange: Subject<Todo[]> = new Subject<Todo[]>();
+  // Observable for todo changes
+  todoChange$ = this.todoChange.asObservable();
+  
+  ngOnInit() {
+    // Subscribe to todo changes
+    this.todoChange.subscribe(() => {
+      // Handle todo changes here or in a separate function
+      console.log('ToDo list changed:', this.todos);
+    });
+  }
+
   // Adding a todo into the todo list array
   saveTodo(){
     if(this.newTodo){
@@ -22,6 +36,8 @@ export class AppComponent {
       todo.isCompleted = true;
       this.todos.push(todo);
       this.newTodo = "";
+      // Notify subscribers about the change
+      this.todoChange.next(this.todos);
     }else{
       alert("Please Enter a ToDo");
     }
@@ -30,6 +46,7 @@ export class AppComponent {
   // Complete-Restart a todo
   Completetodo(id:number){
     this.markTask(id).then((IDnum) => this.todos[IDnum].isCompleted = !this.todos[IDnum].isCompleted);
+    this.todoChange.next(this.todos);
   }
   async markTask(id:number){
     let result = id;
@@ -40,6 +57,7 @@ export class AppComponent {
   // Deleting a todo
   Deletetodo(id:number){
     this.dltTask(id).then((IDnum) => this.todos = this.todos.filter((v,i)=>i !== IDnum));
+    this.todoChange.next(this.todos);
   }
   async dltTask(id:number){
     let result = await id;  // using "await" converts the result into a value, or else an "async" function always returns a promoise.
@@ -48,13 +66,13 @@ export class AppComponent {
   }
   
 
-  changeTheme(){
-    this.theme = !this.theme;
-    this.btn = document.getElementById("themeButton");
-    this.btn.addEventListener("click", () => {
-      const newTheme = (!this.theme)? "light" : "dark";
-      const newCta = newTheme === "dark" ? "dark" : "light";
-      this.btn.innerText = newCta;
-    });
-  }
+  // changeTheme(){
+  //   this.theme = !this.theme;
+  //   this.btn = document.getElementById("themeButton");
+  //   this.btn.addEventListener("click", () => {
+  //     const newTheme = (!this.theme)? "light" : "dark";
+  //     const newCta = newTheme === "dark" ? "dark" : "light";
+  //     this.btn.innerText = newCta;
+  //   });
+  // }
 }
